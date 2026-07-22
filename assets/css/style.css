@@ -1,0 +1,1495 @@
+/* 
+   style.css
+   Website KKN 124 Desa Bojong, Parigi, Pangandaran
+   Modern, Professional, and Responsive Styling
+*/
+
+/* --------------------------------------------------------
+   1. VARIABLES & DESIGN TOKENS
+   -------------------------------------------------------- */
+:root {
+    --primary: #0f766e;          /* Deep Teal (Coastal Forest) */
+    --primary-light: #14b8a6;    /* Bright Teal */
+    --primary-dark: #0f172a;     /* Dark Navy/Slate */
+    --primary-gradient: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    --accent: #f59e0b;           /* Amber/Gold (Golden Beach Sand) */
+    --accent-dark: #b45309;      /* Dark Amber */
+    --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --bg-light: #f8fafc;         /* Soft slate */
+    --bg-white: #ffffff;
+    --text-dark: #0f172a;        /* Deep slate for readability */
+    --text-muted: #64748b;       /* Muted grey */
+    --text-light: #ffffff;
+    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --card-shadow: 0 12px 30px -10px rgba(15, 118, 110, 0.08);
+    --card-shadow-hover: 0 20px 40px -15px rgba(15, 118, 110, 0.2);
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.2s ease;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-blur: blur(12px);
+}
+
+/* --------------------------------------------------------
+   2. RESET & BASE STYLES
+   -------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--primary-dark);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+section {
+    padding: 100px 0;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 24px;
+    padding-left: 24px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0d9488;
+}
+
+/* --------------------------------------------------------
+   3. UTILITY CLASSES
+   -------------------------------------------------------- */
+.text-center { text-align: center; }
+.text-primary { color: var(--primary); }
+.text-accent { color: var(--accent); }
+.text-muted { color: var(--text-muted); }
+
+.section-header {
+    max-width: 700px;
+    margin: 0 auto 60px auto;
+    text-align: center;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: var(--radius-full);
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: var(--text-light);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(15, 118, 110, 0.4);
+}
+
+.btn-accent {
+    background: var(--accent-gradient);
+    color: var(--text-light);
+}
+
+.btn-accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary-gradient);
+    color: var(--text-light);
+    transform: translateY(-3px);
+}
+
+/* Badge Fallback Database */
+.db-badge {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+}
+
+.db-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.db-badge.connected .dot { background-color: #22c55e; }
+.db-badge.demo .dot { background-color: #eab308; }
+
+/* --------------------------------------------------------
+   4. NAVIGATION BAR (GLASSMORPHISM)
+   -------------------------------------------------------- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    padding: 20px 0;
+    transition: var(--transition-smooth);
+}
+
+.navbar.scrolled {
+    padding: 12px 0;
+    background-color: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--primary);
+    line-height: 1.1;
+}
+
+.logo-text span {
+    display: block;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+}
+
+.nav-links a {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    position: relative;
+    padding: 6px 0;
+}
+
+.navbar:not(.scrolled) .nav-links a {
+    color: var(--text-light);
+}
+
+.navbar:not(.scrolled) .logo-text {
+    color: var(--text-light);
+}
+.navbar:not(.scrolled) .logo-text span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--accent);
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+.navbar:not(.scrolled) .menu-toggle {
+    color: var(--text-light);
+}
+
+/* --------------------------------------------------------
+   5. HERO SECTION
+   -------------------------------------------------------- */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #073530; /* Warna dasar hijau gelap */
+    color: var(--text-light);
+    padding-top: 120px;
+    padding-bottom: 80px;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../img/background.jpeg') no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll;
+    z-index: 0;
+}
+
+/* Overlay gelap semi-transparan di atas gambar background */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        160deg,
+        rgba(7, 53, 48, 0.78) 0%,
+        rgba(15, 118, 110, 0.65) 40%,
+        rgba(15, 23, 42, 0.88) 100%
+    );
+    z-index: 0;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.hero-tag {
+    display: inline-block;
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fef08a;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    color: #fff;
+    font-size: 3.5rem;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    font-weight: 800;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 36px;
+    max-width: 620px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-circle {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(20,184,166,0.3) 0%, rgba(15,118,110,0.1) 70%);
+    position: absolute;
+    z-index: 1;
+    animation: pulseCircle 8s infinite alternate ease-in-out;
+}
+
+.hero-card {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    position: relative;
+    z-index: 2;
+    transform: translateY(0);
+    animation: floatCard 6s infinite ease-in-out;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+}
+
+.hero-card-icon {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    animation: spinSlow 12s infinite linear;
+}
+
+.hero-card h3 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.hero-card p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0;
+}
+
+/* Animations for Hero */
+@keyframes pulseCircle {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.2); opacity: 0.8; }
+}
+
+@keyframes floatCard {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes spinSlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------
+   6. STRUKTUR ANGGOTA
+   -------------------------------------------------------- */
+.anggota-section {
+    background-color: var(--bg-white);
+}
+
+.anggota-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.anggota-card {
+    background-color: var(--bg-light);
+    border-radius: var(--radius-md);
+    padding: 35px 24px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(15, 118, 110, 0.03);
+}
+
+.anggota-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.anggota-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+    background-color: #fff;
+}
+
+.anggota-card:hover::before {
+    opacity: 1;
+}
+
+/* Dynamic Avatar (Gradient Placeholder) */
+.avatar-container {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 24px auto;
+    position: relative;
+    padding: 4px;
+    background: linear-gradient(to right, #0f766e, #f59e0b);
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.15);
+    transition: var(--transition-smooth);
+}
+
+.anggota-card:hover .avatar-container {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    border: 3px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style for SVG placeholder avatar */
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    border: 3px solid #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Background gradient variations for avatars to make list colorful */
+.anggota-card:nth-child(2n) .avatar-placeholder { background: linear-gradient(135deg, #0f766e 0%, #1e1b4b 100%); }
+.anggota-card:nth-child(3n) .avatar-placeholder { background: linear-gradient(135deg, #047857 0%, #064e3b 100%); }
+.anggota-card:nth-child(4n) .avatar-placeholder { background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); }
+.anggota-card:nth-child(5n) .avatar-placeholder { background: linear-gradient(135deg, #b45309 0%, #78350f 100%); }
+
+.anggota-name {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+}
+
+.anggota-role {
+    display: inline-block;
+    background-color: rgba(15, 118, 110, 0.08);
+    color: var(--primary);
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.anggota-prodi {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------
+   7. PROGRAM KERJA
+   -------------------------------------------------------- */
+.proker-section {
+    background-color: var(--bg-light);
+}
+
+.proker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.proker-card {
+    background-color: var(--bg-white);
+    border-radius: var(--radius-md);
+    padding: 40px 30px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-smooth);
+    border: 1px solid rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.proker-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.proker-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background-color: rgba(15, 118, 110, 0.07);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+    transition: var(--transition-smooth);
+}
+
+.proker-card:hover .proker-icon-box {
+    background-color: var(--primary);
+    color: #fff;
+    transform: rotateY(180deg);
+}
+
+.proker-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.proker-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.proker-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.proker-owner {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.proker-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+}
+
+.status-selesai {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+.status-berjalan {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #1d4ed8;
+}
+.status-terencana {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #b45309;
+}
+
+/* --------------------------------------------------------
+   8. GALERI
+   -------------------------------------------------------- */
+.galeri-section {
+    background-color: var(--bg-white);
+}
+
+.galeri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.galeri-card {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    height: 250px;
+    cursor: pointer;
+    background-color: #0f172a;
+}
+
+.galeri-img-wrapper {
+    width: 100%;
+    height: 100%;
+    transition: var(--transition-smooth);
+}
+
+/* Custom visual styling instead of blank images if files are missing */
+.galeri-img-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(15, 118, 110, 0.7), rgba(15, 23, 42, 0.9));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+    color: #fff;
+    transition: var(--transition-smooth);
+}
+
+.galeri-img-fallback i {
+    font-size: 2rem;
+    margin-bottom: auto;
+    color: var(--accent);
+}
+
+.galeri-card:hover .galeri-img-wrapper {
+    transform: scale(1.08);
+}
+
+.galeri-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 118, 110, 0.4) 60%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    color: #fff;
+    transition: var(--transition-smooth);
+    z-index: 2;
+}
+
+.galeri-card:hover .galeri-overlay {
+    opacity: 1;
+}
+
+.galeri-overlay h3 {
+    color: #fff;
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    transition-delay: 0.1s;
+}
+
+.galeri-overlay p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    transition-delay: 0.15s;
+}
+
+.galeri-card:hover .galeri-overlay h3,
+.galeri-card:hover .galeri-overlay p {
+    transform: translateY(0);
+}
+
+/* Lightbox Modal */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.95);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-content {
+    max-width: 900px;
+    width: 100%;
+    background-color: var(--bg-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.lightbox.active .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.lightbox-close:hover {
+    background-color: var(--accent);
+}
+
+.lightbox-body {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+}
+
+.lightbox-img-box {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.lightbox-details {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lightbox-details span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.lightbox-details h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.lightbox-details p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------
+   9. BERITA / LAPORAN KEGIATAN
+   -------------------------------------------------------- */
+.berita-section {
+    background-color: var(--bg-light);
+}
+
+.berita-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.berita-card {
+    background-color: var(--bg-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-smooth);
+    border: 1px solid rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.berita-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.berita-img-box {
+    height: 200px;
+    background-color: #0f172a;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fallback visualization for news cover image */
+.berita-img-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f766e 0%, #1e1b4b 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 4rem;
+}
+
+.berita-date {
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    background: var(--accent-gradient);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.berita-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.berita-author {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.berita-title {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    line-height: 1.35;
+}
+
+.berita-excerpt {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.berita-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.berita-card:hover .berita-link {
+    color: var(--accent);
+}
+
+/* --------------------------------------------------------
+   10. LOKASI MAPS
+   -------------------------------------------------------- */
+.lokasi-section {
+    background-color: var(--bg-white);
+}
+
+.lokasi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.lokasi-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.lokasi-info p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+.lokasi-list {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.lokasi-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.lokasi-list li i {
+    font-size: 1.3rem;
+    color: var(--primary);
+    background-color: rgba(15, 118, 110, 0.08);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lokasi-list li div h4 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.lokasi-list li div p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.map-wrapper {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 5px solid #fff;
+    height: 400px;
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* --------------------------------------------------------
+   11. KONTAK
+   -------------------------------------------------------- */
+.kontak-section {
+    background: linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)),
+                url('../img/background.jpeg') no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll;
+    color: #fff;
+}
+
+.kontak-section h2, .kontak-section h3 {
+    color: #fff;
+}
+
+.kontak-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 48px;
+}
+
+.kontak-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kontak-details h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.kontak-details p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.kontak-info-list {
+    list-style: none;
+}
+
+.kontak-info-list li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.kontak-info-list li i {
+    font-size: 1.2rem;
+    color: var(--accent);
+    background-color: rgba(245, 158, 11, 0.15);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kontak-info-list li div h5 {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kontak-info-list li div p {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0;
+}
+
+/* Contact Form Styling */
+.kontak-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* AJAX Feedback Notification */
+.form-alert {
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    display: none;
+    animation: slideDown 0.3s ease;
+}
+
+.form-alert.success {
+    background-color: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #86efac;
+    display: block;
+}
+
+.form-alert.error {
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    display: block;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Loading spinner */
+.btn .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------
+   12. FOOTER
+   -------------------------------------------------------- */
+footer {
+    background-color: #090d16;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 60px 0 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+}
+
+.footer-brand h4 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.footer-brand p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-links h4, .footer-instagram h4 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.footer-links h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent);
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links ul li {
+    margin-bottom: 12px;
+}
+
+.footer-links ul li a {
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.footer-links ul li a:hover {
+    color: var(--accent);
+    padding-left: 5px;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.social-links a:hover {
+    background-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------
+   13. SCROLL-ANIMATION TRIGGERS (CSS CLASSES)
+   -------------------------------------------------------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delays for child animations */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+
+.reveal-fade {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+.reveal-fade.active {
+    opacity: 1;
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/* --------------------------------------------------------
+   14. RESPONSIVE MEDIA QUERIES
+   -------------------------------------------------------- */
+@media (max-width: 992px) {
+    section {
+        padding: 80px 0;
+    }
+    
+    .section-header h2 {
+        font-size: 2.1rem;
+    }
+    
+    /* Navbar menu */
+    .menu-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background-color: var(--primary-dark);
+        flex-direction: column;
+        padding: 100px 40px 40px 40px;
+        transition: var(--transition-smooth);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        z-index: 998;
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-links a {
+        color: #fff !important;
+        font-size: 1.1rem;
+    }
+    
+    /* Hero */
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        text-align: center;
+    }
+    
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+    
+    .hero p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-actions {
+        justify-content: center;
+    }
+    
+    .hero-visual {
+        margin-top: 20px;
+    }
+    
+    /* Lokasi */
+    .lokasi-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    /* Kontak */
+    .kontak-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .hero h1 {
+        font-size: 2.3rem;
+    }
+    
+    .lightbox-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .lightbox-details {
+        padding: 20px;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        width: 100%;
+    }
+    
+    .hero-card {
+        width: 100%;
+        max-width: 280px;
+    }
+}
