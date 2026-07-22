@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin KKN 124 Desa Bojong</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://uinsaizu.ac.id/wp-content/uploads/2021/04/cropped-Logo-UIN-SAIZU-192x192.png" type="image/x-icon">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Master CSS -->
+    
+    <style>
+        /* Admin Dashboard Layout Overrides */
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .sidebar-brand {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+            padding: 0 20px;
+        }
+        .sidebar-brand span {
+            color: var(--accent);
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-menu li {
+            padding: 0 16px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition-fast);
+        }
+        .sidebar-menu li.active a,
+        .sidebar-menu a:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .sidebar-menu li.active a {
+            background-color: var(--primary);
+            color: #fff;
+        }
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            color: #ef4444 !important;
+        }
+
+        .main-wrapper {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.95rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background-color: #fff;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background-color: rgba(13, 148, 136, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            color: #0f172a;
+        }
+        .stat-info p {
+            margin: 2px 0 0 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Panels */
+        .data-panel {
+            background-color: #fff;
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .panel-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+        }
+        tr:hover td {
+            background-color: #fafafa;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group-full {
+            grid-column: span 2;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #1e293b;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+        .action-link {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .action-edit { background-color: rgba(245,158,11,0.1); color: #d97706; }
+        .action-edit:hover { background-color: var(--accent); color: #fff; }
+        .action-delete { background-color: rgba(239,68,68,0.1); color: #ef4444; }
+        .action-delete:hover { background-color: #ef4444; color: #fff; }
+
+        /* General Alert */
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+        .alert-success { background-color: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #059669; }
+        .alert-error { background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #dc2626; }
+
+        /* Tab switching */
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Password toggle inside Admin */
+        .password-toggle-container {
+            position: relative;
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+        .password-toggle-btn:hover {
+            color: var(--primary) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+            .sidebar-brand {
+                margin-bottom: 20px;
+            }
+            .sidebar-menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 24px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group-full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/admin-C3rFeT2y.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/firebase-DS5gF_2V.js">
+  <link rel="stylesheet" crossorigin href="/assets/firebase-CT9IaB0N.css">
+</head>
+<body>
+
+    <!-- ======================================================
+         SIDEBAR NAVIGATION
+         ====================================================== -->
+    <div class="sidebar">
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; padding: 0 10px;">
+            <img src="/assets/logo-KKN-124-ClpZHr_f.png" alt="Logo KKN 124" style="height: 42px; width: auto; object-fit: contain; filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+        </div>
+        <div class="sidebar-brand">PANEL <span>ADMIN</span></div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-tab="dashboard">
+                <a href="#dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            </li>
+            <li class="menu-item" data-tab="anggota">
+                <a href="#anggota"><i class="bi bi-people-fill"></i> Data Anggota</a>
+            </li>
+            <li class="menu-item" data-tab="proker">
+                <a href="#proker"><i class="bi bi-briefcase-fill"></i> Program Kerja</a>
+            </li>
+            <li class="menu-item" data-tab="galeri">
+                <a href="#galeri"><i class="bi bi-image"></i> Galeri Dokumentasi</a>
+            </li>
+            <li class="menu-item" data-tab="berita">
+                <a href="#berita"><i class="bi bi-newspaper"></i> Berita Kegiatan</a>
+            </li>
+            <li class="menu-item" data-tab="pesan">
+                <a href="#pesan"><i class="bi bi-chat-left-text-fill"></i> Pesan Masuk</a>
+            </li>
+            <li class="menu-item" data-tab="pengaturan">
+                <a href="#pengaturan"><i class="bi bi-geo-alt-fill"></i> Pengaturan Posko</a>
+            </li>
+            <li class="menu-item" data-tab="ganti_sandi">
+                <a href="#ganti_sandi"><i class="bi bi-key-fill"></i> Ganti Sandi</a>
+            </li>
+            <li>
+                <a href="#" id="admin-logout-btn" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Log Out</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ======================================================
+         MAIN CONTENT WRAPPER
+         ====================================================== -->
+    <div class="main-wrapper">
+        <header>
+            <div class="header-title">
+                <h1>Sistem Manajemen Website KKN 124</h1>
+            </div>
+            <div class="header-actions">
+                <span>Halo, <strong id="admin-username-display">Admin</strong></span>
+                <a href="index.html" target="_blank" class="btn btn-secondary"><i class="bi bi-globe"></i> Lihat Website</a>
+            </div>
+        </header>
+
+        <!-- Global Feedback Alert Messages -->
+        <div id="global-alert" class="alert" style="display: none;"></div>
+
+        <!-- ======================================================
+             TAB: OVERVIEW / DASHBOARD
+             ====================================================== -->
+        <div id="tab-dashboard" class="tab-panel active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-count-anggota">0</h3>
+                        <p>Anggota KKN</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: #3b82f6; background-color: rgba(59,130,246,0.1);"><i class="bi bi-briefcase-fill"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-count-proker">0</h3>
+                        <p>Program Kerja</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: #eab308; background-color: rgba(234,179,8,0.1);"><i class="bi bi-image"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-count-galeri">0</h3>
+                        <p>Foto Galeri</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: #ec4899; background-color: rgba(236,72,153,0.1);"><i class="bi bi-newspaper"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-count-berita">0</h3>
+                        <p>Artikel Berita</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: #8b5cf6; background-color: rgba(139,92,246,0.1);"><i class="bi bi-chat-left-text-fill"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-count-pesan">0</h3>
+                        <p>Pesan Kontak</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-panel">
+                <h2>Selamat Datang di Panel Kontrol Admin</h2>
+                <p style="margin-top: 15px; color: #475569; line-height: 1.8;">
+                    Melalui panel kontrol ini, Anda memiliki kendali penuh terhadap konten yang dipublikasikan pada website utama **KKN 124 Desa Bojong**. Silakan gunakan menu sidebar untuk mengelola database anggota, menyusun program kerja, memperbarui galeri dokumentasi foto, menulis berita/laporan kegiatan terbaru, dan memonitor pesan masuk dari pengunjung website.
+                </p>
+                <div style="margin-top: 25px; display: flex; gap: 15px;">
+                    <a href="#anggota" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Kelola Anggota</a>
+                    <a href="#proker" class="btn btn-accent"><i class="bi bi-plus-circle"></i> Susun Proker</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: DATA ANGGOTA (CRUD UI)
+             ====================================================== -->
+        <div id="tab-anggota" class="tab-panel">
+            <!-- List View -->
+            <div id="anggota-list-view">
+                <div class="panel-header">
+                    <h2>Daftar Anggota KKN 124</h2>
+                    <button class="btn btn-primary btn-add-toggle" data-module="anggota"><i class="bi bi-plus-circle"></i> Tambah Anggota</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">Urutan</th>
+                                <th>Nama</th>
+                                <th>Divisi/Jabatan</th>
+                                <th>Program Studi</th>
+                                <th style="width: 100px;">Foto</th>
+                                <th style="width: 180px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-anggota">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form View -->
+            <div id="anggota-form-view" style="display: none;" class="data-panel">
+                <div class="panel-header">
+                    <h2 id="anggota-form-title">Tambah Anggota Baru</h2>
+                    <button class="btn btn-secondary btn-cancel-form" data-module="anggota"><i class="bi bi-arrow-left"></i> Kembali</button>
+                </div>
+                <form id="form-anggota">
+                    <input type="hidden" id="anggota-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="anggota-nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" id="anggota-nama" class="form-control" required placeholder="Contoh: Budi Gunawan">
+                        </div>
+                        <div class="form-group">
+                            <label for="anggota-urutan" class="form-label">Urutan Tampil (Prioritas)</label>
+                            <input type="number" id="anggota-urutan" class="form-control" required min="0" placeholder="Contoh: 1">
+                        </div>
+                        <div class="form-group">
+                            <label for="anggota-divisi" class="form-label">Divisi / Jabatan</label>
+                            <input type="text" id="anggota-divisi" class="form-control" required placeholder="Contoh: Divisi Keagamaan">
+                        </div>
+                        <div class="form-group">
+                            <label for="anggota-prodi" class="form-label">Program Studi</label>
+                            <input type="text" id="anggota-prodi" class="form-control" required placeholder="Contoh: Pendidikan Agama Islam">
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label for="anggota-foto" class="form-label">Foto Profil (Kosongkan jika tidak diubah)</label>
+                            <input type="file" id="anggota-foto" class="form-control" accept="image/*">
+                            <div id="anggota-foto-preview-container" style="margin-top: 10px; display: none;">
+                                <span style="font-size: 0.85rem; color: #475569;">Foto aktif saat ini: </span>
+                                <a id="anggota-foto-preview-link" href="#" target="_blank" style="font-size: 0.85rem; word-break: break-all;">Lihat Foto</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> <span id="anggota-submit-text">Simpan Data</span></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: PROGRAM KERJA (CRUD UI)
+             ====================================================== -->
+        <div id="tab-proker" class="tab-panel">
+            <!-- List View -->
+            <div id="proker-list-view">
+                <div class="panel-header">
+                    <h2>Daftar Program Kerja KKN 124</h2>
+                    <button class="btn btn-primary btn-add-toggle" data-module="proker"><i class="bi bi-plus-circle"></i> Tambah Proker</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Icon</th>
+                                <th>Nama Program Kerja</th>
+                                <th>Divisi Pelaksana</th>
+                                <th style="width: 120px;">Status</th>
+                                <th style="width: 180px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-proker">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form View -->
+            <div id="proker-form-view" style="display: none;" class="data-panel">
+                <div class="panel-header">
+                    <h2 id="proker-form-title">Tambah Program Kerja</h2>
+                    <button class="btn btn-secondary btn-cancel-form" data-module="proker"><i class="bi bi-arrow-left"></i> Kembali</button>
+                </div>
+                <form id="form-proker">
+                    <input type="hidden" id="proker-id">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label for="proker-nama" class="form-label">Nama Program Kerja</label>
+                            <input type="text" id="proker-nama" class="form-control" required placeholder="Contoh: Digitalisasi UMKM Bojong">
+                        </div>
+                        <div class="form-group">
+                            <label for="proker-divisi" class="form-label">Divisi Penanggung Jawab</label>
+                            <input type="text" id="proker-divisi" class="form-control" required placeholder="Contoh: Divisi Kewirausahaan">
+                        </div>
+                        <div class="form-group">
+                            <label for="proker-status" class="form-label">Status Program</label>
+                            <select id="proker-status" class="form-control">
+                                <option value="Terencana">Terencana</option>
+                                <option value="Berjalan">Berjalan</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label for="proker-icon" class="form-label">Class Icon Bootstrap (Gunakan awalan bi-)</label>
+                            <input type="text" id="proker-icon" class="form-control" required placeholder="Contoh: bi-shop, bi-book, bi-heart-pulse">
+                            <span style="font-size: 0.8rem; color: #64748b;">Lihat daftar icon lengkap di <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></span>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label for="proker-deskripsi" class="form-label">Deskripsi Rincian Program</label>
+                            <textarea id="proker-deskripsi" class="form-control" required placeholder="Jelaskan mengenai program kerja ini secara mendetail..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> <span id="proker-submit-text">Simpan Data</span></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: DOKUMENTASI GALERI (CRUD UI)
+             ====================================================== -->
+        <div id="tab-galeri" class="tab-panel">
+            <!-- List View -->
+            <div id="galeri-list-view">
+                <div class="panel-header">
+                    <h2>Galeri Dokumentasi Kegiatan KKN</h2>
+                    <button class="btn btn-primary btn-add-toggle" data-module="galeri"><i class="bi bi-plus-circle"></i> Tambah Dokumentasi</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Foto</th>
+                                <th>Judul Dokumentasi</th>
+                                <th>Tanggal</th>
+                                <th>Deskripsi Singkat</th>
+                                <th style="width: 180px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-galeri">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form View -->
+            <div id="galeri-form-view" style="display: none;" class="data-panel">
+                <div class="panel-header">
+                    <h2 id="galeri-form-title">Tambah Dokumentasi Baru</h2>
+                    <button class="btn btn-secondary btn-cancel-form" data-module="galeri"><i class="bi bi-arrow-left"></i> Kembali</button>
+                </div>
+                <form id="form-galeri">
+                    <input type="hidden" id="galeri-id">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label for="galeri-judul" class="form-label">Judul Dokumentasi Kegiatan</label>
+                            <input type="text" id="galeri-judul" class="form-control" required placeholder="Contoh: Rapat dengan Kepala Desa">
+                        </div>
+                        <div class="form-group">
+                            <label for="galeri-tanggal" class="form-label">Tanggal Kegiatan</label>
+                            <input type="date" id="galeri-tanggal" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="galeri-foto" class="form-label">Unggah Foto (Maks 3MB - JPG, PNG, WEBP)</label>
+                            <input type="file" id="galeri-foto" class="form-control" accept="image/*">
+                            <div id="galeri-foto-preview-container" style="margin-top: 10px; display: none;">
+                                <span style="font-size: 0.85rem; color: #475569;">File aktif saat ini: </span>
+                                <a id="galeri-foto-preview-link" href="#" target="_blank" style="font-size: 0.85rem; word-break: break-all;">Lihat Foto</a>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label for="galeri-deskripsi" class="form-label">Deskripsi Singkat Kegiatan</label>
+                            <textarea id="galeri-deskripsi" class="form-control" placeholder="Jelaskan mengenai detail aktivitas saat pengambilan foto ini..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> <span id="galeri-submit-text">Simpan Data</span></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: BERITA / LAPORAN KEGIATAN (CRUD UI)
+             ====================================================== -->
+        <div id="tab-berita" class="tab-panel">
+            <!-- List View -->
+            <div id="berita-list-view">
+                <div class="panel-header">
+                    <h2>Manajer Berita & Laporan Kegiatan</h2>
+                    <button class="btn btn-primary btn-add-toggle" data-module="berita"><i class="bi bi-plus-circle"></i> Tulis Berita</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Cover</th>
+                                <th>Judul Berita</th>
+                                <th>Penulis</th>
+                                <th>Tanggal Rilis</th>
+                                <th style="width: 180px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-berita">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form View -->
+            <div id="berita-form-view" style="display: none;" class="data-panel">
+                <div class="panel-header">
+                    <h2 id="berita-form-title">Tulis Berita / Laporan Baru</h2>
+                    <button class="btn btn-secondary btn-cancel-form" data-module="berita"><i class="bi bi-arrow-left"></i> Kembali</button>
+                </div>
+                <form id="form-berita">
+                    <input type="hidden" id="berita-id">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label for="berita-judul" class="form-label">Judul Artikel Berita</label>
+                            <input type="text" id="berita-judul" class="form-control" required placeholder="Masukkan judul yang menarik...">
+                        </div>
+                        <div class="form-group">
+                            <label for="berita-penulis" class="form-label">Penulis / Kontributor</label>
+                            <input type="text" id="berita-penulis" class="form-control" required placeholder="Nama penulis">
+                        </div>
+                        <div class="form-group">
+                            <label for="berita-foto" class="form-label">Unggah Foto Cover (JPG, PNG, WEBP)</label>
+                            <input type="file" id="berita-foto" class="form-control" accept="image/*">
+                            <div id="berita-foto-preview-container" style="margin-top: 10px; display: none;">
+                                <span style="font-size: 0.85rem; color: #475569;">Foto aktif: </span>
+                                <a id="berita-foto-preview-link" href="#" target="_blank" style="font-size: 0.85rem; word-break: break-all;">Lihat Foto</a>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label for="berita-konten" class="form-label">Isi Konten Berita Lengkap</label>
+                            <textarea id="berita-konten" class="form-control" style="min-height: 250px;" required placeholder="Tuliskan berita secara lengkap di sini..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> <span id="berita-submit-text">Terbitkan Berita</span></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: PESAN MASUK DARI PENGUNJUNG
+             ====================================================== -->
+        <div id="tab-pesan" class="tab-panel">
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h2>Pesan Hubungi Kami dari Pengunjung</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 150px;">Pengirim</th>
+                                <th>Email</th>
+                                <th>Subjek</th>
+                                <th>Pesan</th>
+                                <th style="width: 140px;">Tanggal Masuk</th>
+                                <th style="width: 100px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-pesan">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: PENGATURAN POSKO & LOKASI
+             ====================================================== -->
+        <div id="tab-pengaturan" class="tab-panel">
+            <div class="data-panel" style="max-width: 800px;">
+                <div class="panel-header">
+                    <h2>Pengaturan Posko & Identitas Kegiatan</h2>
+                </div>
+                <form id="form-pengaturan">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label for="pengaturan-alamat" class="form-label">Alamat Lengkap Posko</label>
+                            <input type="text" id="pengaturan-alamat" class="form-control" required placeholder="Contoh: Jln. Raya Parigi No. 10...">
+                        </div>
+                        
+                        <div class="form-group form-group-full">
+                            <label for="pengaturan-map" class="form-label">Google Maps Embed URL / Iframe Code</label>
+                            <textarea id="pengaturan-map" class="form-control" required style="min-height: 100px;" placeholder="Masukkan URL Embed Google Maps (misal https://www.google.com/maps/embed?...) atau seluruh kode iframe."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pengaturan-email" class="form-label">Email Resmi Posko</label>
+                            <input type="email" id="pengaturan-email" class="form-control" required placeholder="Contoh: kkn124.bojong@gmail.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pengaturan-whatsapp" class="form-label">Nomor WhatsApp Resmi (Sertakan Kode Negara)</label>
+                            <input type="text" id="pengaturan-whatsapp" class="form-control" required placeholder="Contoh: +62 812-3456-7890">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pengaturan-instagram" class="form-label">Username Instagram KKN (Sertakan awalan @)</label>
+                            <input type="text" id="pengaturan-instagram" class="form-control" required placeholder="Contoh: @diary.bojong124">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pengaturan-hari" class="form-label">Durasi Masa Pengabdian (Hari)</label>
+                            <input type="number" id="pengaturan-hari" class="form-control" required min="1" placeholder="Contoh: 40">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan Pengaturan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================
+             TAB: GANTI SANDI ADMIN
+             ====================================================== -->
+        <div id="tab-ganti_sandi" class="tab-panel">
+            <div class="data-panel" style="max-width: 600px;">
+                <div class="panel-header">
+                    <h2>Ganti Sandi Administrator</h2>
+                </div>
+                <form id="form-ganti-sandi">
+                    <div class="form-group">
+                        <label for="sandi-lama" class="form-label">Sandi Lama</label>
+                        <div class="password-toggle-container">
+                            <input type="password" id="sandi-lama" class="form-control" placeholder="Masukkan kata sandi lama Anda" required autocomplete="current-password" style="padding-right: 45px;">
+                            <button type="button" class="password-toggle-btn toggle-password-btn" data-target="sandi-lama">
+                                <i class="bi bi-eye-slash" id="eye-icon-sandi-lama"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sandi-baru" class="form-label">Sandi Baru (Minimal 6 karakter)</label>
+                        <div class="password-toggle-container">
+                            <input type="password" id="sandi-baru" class="form-control" placeholder="Masukkan kata sandi baru" required autocomplete="new-password" style="padding-right: 45px;">
+                            <button type="button" class="password-toggle-btn toggle-password-btn" data-target="sandi-baru">
+                                <i class="bi bi-eye-slash" id="eye-icon-sandi-baru"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sandi-konfirmasi" class="form-label">Konfirmasi Sandi Baru</label>
+                        <div class="password-toggle-container">
+                            <input type="password" id="sandi-konfirmasi" class="form-control" placeholder="Ketik ulang kata sandi baru" required autocomplete="new-password" style="padding-right: 45px;">
+                            <button type="button" class="password-toggle-btn toggle-password-btn" data-target="sandi-konfirmasi">
+                                <i class="bi bi-eye-slash" id="eye-icon-sandi-konfirmasi"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-shield-lock-fill"></i> Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase JS Core Module -->
+</body>
+</html>

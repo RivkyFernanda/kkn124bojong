@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - KKN 124 Desa Bojong</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://uinsaizu.ac.id/wp-content/uploads/2021/04/cropped-Logo-UIN-SAIZU-192x192.png" type="image/x-icon">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- CSS Embed/Link -->
+    <style>
+        body {
+            background: linear-gradient(rgba(7, 53, 48, 0.85), rgba(15, 23, 42, 0.92)),
+                        url('/assets/background-DAXO0VR1.jpeg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-md);
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            color: #fff;
+            text-align: center;
+        }
+        .login-logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .login-logo span {
+            color: var(--accent);
+        }
+        .login-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 30px;
+        }
+        .login-alert {
+            background-color: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: left;
+            display: none; /* diaktifkan lewat js */
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-login {
+            background: var(--accent-gradient);
+            color: #fff;
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
+        }
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            transition: var(--transition-fast);
+        }
+        .back-to-home:hover {
+            color: var(--accent);
+        }
+        .password-toggle-container {
+            position: relative;
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+        .password-toggle-btn:hover {
+            color: var(--accent) !important;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/login-YNW2SGAz.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/firebase-DS5gF_2V.js">
+  <link rel="stylesheet" crossorigin href="/assets/firebase-CT9IaB0N.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Logo berdampingan di atas form -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <img src="/assets/logo-KKN-124-ClpZHr_f.png" alt="Logo KKN 124" style="height: 56px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">
+        </div>
+        <div class="login-logo">PANEL <span>ADMIN</span></div>
+        <p class="login-subtitle">KKN 124 Desa Bojong - Parigi</p>
+        
+        <div class="login-alert" id="login-error-alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span id="login-error-msg"></span>
+        </div>
+        
+        <form id="login-form">
+            <div class="form-group" style="text-align: left;">
+                <label for="username" class="form-label">Username / Email</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan username admin" required autocomplete="username">
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-toggle-container">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password" required autocomplete="current-password" style="padding-right: 45px;">
+                    <button type="button" id="toggle-password" class="password-toggle-btn" title="Lihat/Sembunyikan Sandi">
+                        <i class="bi bi-eye-slash" id="toggle-password-icon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-login" id="login-btn">
+                <span>Sign In <i class="bi bi-box-arrow-in-right"></i></span>
+            </button>
+        </form>
+        
+        <a href="index.html" class="back-to-home">
+            <i class="bi bi-arrow-left"></i> Kembali ke Website Utama
+        </a>
+    </div>
+
+    <!-- Firebase JS Login Module -->
+</body>
+</html>
