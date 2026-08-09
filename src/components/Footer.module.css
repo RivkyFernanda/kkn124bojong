@@ -1,0 +1,246 @@
+.footer {
+  background: #070f18;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Footer Top */
+.footerTop {
+  padding: 5rem 0 3rem;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
+  gap: 3rem;
+}
+
+/* Brand Column */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.brandIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #1a7f5a, #27ae75);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 15px rgba(26, 127, 90, 0.4);
+  flex-shrink: 0;
+}
+
+.brandName {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.brandSub {
+  font-size: 0.72rem;
+  color: #4ecca3;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.brandDesc {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.socialBtn {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.socialBtn:hover {
+  background: rgba(26, 127, 90, 0.2);
+  border-color: rgba(78, 204, 163, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Column Title */
+.colTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Link List */
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footerLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding: 0.2rem 0;
+}
+
+.footerLink:hover {
+  color: #4ecca3;
+}
+
+.linkArrow {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.footerLink:hover .linkArrow {
+  transform: translateX(4px);
+}
+
+/* Contact List */
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.contactIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.contactItem strong {
+  display: block;
+  font-size: 0.75rem;
+  color: #4ecca3;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.contactItem p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* UMKM List */
+.umkmList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.umkmItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.umkmItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.umkmItem > span:first-child {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Footer Bottom */
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.5rem 0;
+}
+
+.bottomContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.copyright {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.madeWith {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footerTop {
+    padding: 3rem 0 2rem;
+  }
+  .footerGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .container {
+    padding: 0 1.25rem;
+  }
+  .bottomContent {
+    flex-direction: column;
+    text-align: center;
+  }
+}
