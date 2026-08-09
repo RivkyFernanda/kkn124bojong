@@ -4,16 +4,7 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import styles from "./Gallery.module.css";
 
-const defaultGallery = [
-  { id: "1", title: "Sungai Citumang", description: "Keindahan air jernih biru tosca Citumang yang mempesona", emoji: "🌊", bg: "linear-gradient(135deg, #003355, #0077b6)", wide: true },
-  { id: "2", title: "Hamparan Sawah", description: "Persawahan hijau yang membentang indah", emoji: "🌾", bg: "linear-gradient(135deg, #0f2d1e, #1a7f5a)" },
-  { id: "3", title: "Kerajinan Golok", description: "Golok tradisional hasil karya pengrajin lokal", emoji: "⚔️", bg: "linear-gradient(135deg, #2d1e0f, #c07c3b)" },
-  { id: "4", title: "Wayang Golek", description: "Seni wayang golek yang dilestarikan warga desa", emoji: "🎭", bg: "linear-gradient(135deg, #1e0f2d, #7c3bc0)" },
-  { id: "5", title: "Gendang Tradisional", description: "Tabuhan gendang pengiring ritual dan kesenian desa", emoji: "🥁", bg: "linear-gradient(135deg, #2d1a0f, #8b5e2f)", wide: true },
-  { id: "6", title: "Kegiatan KKN", description: "Mahasiswa KKN 124 bersama warga Desa Bojong", emoji: "🤝", bg: "linear-gradient(135deg, #0a1520, #1a7f5a)" },
-  { id: "7", title: "Opak & Seriping", description: "Kuliner khas Desa Bojong yang lezat dan gurih", emoji: "🍌", bg: "linear-gradient(135deg, #1e2d0f, #5c8b2f)" },
-  { id: "8", title: "Perbukitan Parigi", description: "Panorama alam pegunungan yang memukau", emoji: "🏔️", bg: "linear-gradient(135deg, #0f1520, #003355)" },
-];
+const defaultGallery = [];
 
 export default function Gallery() {
   const [galleryList, setGalleryList] = useState(defaultGallery);
@@ -86,36 +77,45 @@ export default function Gallery() {
           </p>
         </div>
 
-        {/* Masonry/Grid Gallery */}
-        <div className={styles.galleryGrid}>
-          {galleryList.map((item, i) => (
-            <div
-              key={item.id}
-              className={`${styles.galleryItem} ${item.wide ? styles.wide : ""} fade-up`}
-              onClick={() => setLightbox(i)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Lihat foto: ${item.title}`}
-              onKeyDown={(e) => e.key === "Enter" && setLightbox(i)}
-            >
+        {galleryList.length === 0 ? (
+          <div className={`${styles.emptyCard} fade-up`}>
+            <div className={styles.emptyIcon}>📸</div>
+            <h3 className={styles.emptyTitle}>Belum ada foto di galeri</h3>
+            <p className={styles.emptyDesc}>
+              Admin dapat menambahkan gambar baru melalui panel admin dengan judul dan kategori.
+            </p>
+          </div>
+        ) : (
+          <div className={styles.galleryGrid}>
+            {galleryList.map((item, i) => (
               <div
-                className={styles.itemBg}
-                style={{
-                  background: item.imageUrl
-                    ? `url(${item.imageUrl}) center/cover no-repeat`
-                    : item.bg || "linear-gradient(135deg, #0d1b2a, #1b2e3c)",
-                }}
-              />
-              <div className={styles.itemOverlay} />
-              <div className={styles.itemEmoji}>{item.emoji || "📸"}</div>
-              <div className={styles.itemContent}>
-                <h3 className={styles.itemTitle}>{item.title}</h3>
-                <p className={styles.itemDesc}>{item.description}</p>
+                key={item.id}
+                className={`${styles.galleryItem} ${item.wide ? styles.wide : ""} fade-up`}
+                onClick={() => setLightbox(i)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Lihat foto: ${item.title}`}
+                onKeyDown={(e) => e.key === "Enter" && setLightbox(i)}
+              >
+                <div
+                  className={styles.itemBg}
+                  style={{
+                    background: item.imageUrl
+                      ? `url(${item.imageUrl}) center/cover no-repeat`
+                      : "linear-gradient(135deg, #0d1b2a, #1b2e3c)",
+                  }}
+                />
+                <div className={styles.itemOverlay} />
+                <div className={styles.itemEmoji}>{item.category ? "📷" : "📸"}</div>
+                <div className={styles.itemContent}>
+                  <h3 className={styles.itemTitle}>{item.title}</h3>
+                  {item.category && <p className={styles.itemDesc}>{item.category}</p>}
+                </div>
+                <div className={styles.zoomIcon}>🔍</div>
               </div>
-              <div className={styles.zoomIcon}>🔍</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
@@ -146,7 +146,7 @@ export default function Gallery() {
                 </div>
                 <div className={styles.lightboxInfo}>
                   <h3>{galleryList[lightbox].title}</h3>
-                  <p>{galleryList[lightbox].description}</p>
+                  {galleryList[lightbox].category && <p>{galleryList[lightbox].category}</p>}
                 </div>
               </>
             )}

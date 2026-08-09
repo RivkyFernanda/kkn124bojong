@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import {
   collection, getDocs, addDoc, updateDoc, deleteDoc,
-  doc, serverTimestamp, query, orderBy
+  doc, serverTimestamp, query, orderBy, getDoc, setDoc
 } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import styles from "./admin.module.css";
@@ -13,61 +13,54 @@ const TABS = [
   { key: "wisata", label: "🏄 Kelola Wisata", collection: "wisata" },
   { key: "umkm", label: "🛍️ Kelola UMKM", collection: "umkm" },
   { key: "gallery", label: "📸 Kelola Galeri", collection: "gallery" },
+  { key: "news", label: "📰 Kelola Berita", collection: "news" },
   { key: "anggota", label: "👥 Kelola Anggota", collection: "anggota" },
+  { key: "programs", label: "🎯 Kelola Program Unggulan", collection: "programs" },
+  { key: "kontak", label: "⚙️ Kontak KKN", collection: "config" },
+  { key: "pesan", label: "📥 Pesan Masuk", collection: "pesan" },
 ];
 
 const FIELD_CONFIGS = {
   wisata: [
     { key: "name", label: "Nama Wisata", type: "text", required: true },
     { key: "description", label: "Deskripsi", type: "textarea", required: true },
-    { key: "price", label: "Harga Tiket", type: "text", required: false },
-    { key: "location", label: "Lokasi", type: "text", required: false },
-    { key: "openHour", label: "Jam Operasional", type: "text", required: false },
     { key: "imageUrl", label: "URL Gambar", type: "url", required: false },
   ],
   umkm: [
     { key: "name", label: "Nama Produk", type: "text", required: true },
-    { key: "category", label: "Kategori", type: "select", options: ["Kerajinan", "Seni", "Makanan", "Lainnya"], required: true },
-    { key: "owner", label: "Nama Pemilik", type: "text", required: false },
-    { key: "contact", label: "No. WhatsApp", type: "text", required: false },
     { key: "description", label: "Deskripsi", type: "textarea", required: true },
-    { key: "price", label: "Harga", type: "text", required: false },
     { key: "imageUrl", label: "URL Gambar", type: "url", required: false },
   ],
   gallery: [
+    { key: "imageUrl", label: "URL Gambar", type: "url", required: true },
     { key: "title", label: "Judul Foto", type: "text", required: true },
-    { key: "description", label: "Deskripsi", type: "textarea", required: true },
-    { key: "imageUrl", label: "URL Gambar", type: "url", required: false },
+    { key: "category", label: "Kategori", type: "text", required: false },
+  ],
+  news: [
+    { key: "thumbnailUrl", label: "URL Thumbnail", type: "url", required: true },
+    { key: "title", label: "Judul Berita", type: "text", required: true },
+    { key: "description", label: "Deskripsi Singkat", type: "textarea", required: true },
+    { key: "category", label: "Kategori Kegiatan", type: "text", required: false },
+    { key: "bodyImageUrl", label: "URL Gambar Tengah Isi", type: "url", required: false },
   ],
   anggota: [
+    { key: "urutan", label: "Urutan Tampil", type: "number", required: true },
     { key: "nama", label: "Nama Lengkap", type: "text", required: true },
-    { key: "nim", label: "NIM", type: "text", required: false },
+    { key: "foto", label: "Nama File Foto (tanpa ekstensi, cth: rivky)", type: "text", required: false },
     { key: "prodi", label: "Program Studi", type: "text", required: false },
-    {
-      key: "divisi",
-      label: "Divisi / Jabatan",
-      type: "select",
-      options: [
-        "Ketua",
-        "Wakil Ketua",
-        "Sekretaris",
-        "Bendahara",
-        "Humas",
-        "Pendidikan",
-        "Kesehatan",
-        "Lingkungan",
-        "Ekonomi",
-        "Acara",
-        "Dokumentasi",
-        "Anggota",
-      ],
-      required: true,
-    },
+    { key: "divisi", label: "Divisi / Jabatan", type: "text", required: true },
     { key: "instagram", label: "Username Instagram (tanpa @)", type: "text", required: false },
+  ],
+  programs: [
+    { key: "urutan", label: "Urutan Tampil", type: "number", required: true },
+    { key: "title", label: "Judul Program", type: "text", required: true },
+    { key: "description", label: "Deskripsi", type: "textarea", required: true },
+    { key: "icon", label: "Emoji / Ikon", type: "text", required: false },
   ],
 };
 
 function getEmptyForm(tab) {
+  if (!FIELD_CONFIGS[tab]) return {};
   return FIELD_CONFIGS[tab].reduce((acc, f) => ({ ...acc, [f.key]: "" }), {});
 }
 
@@ -75,7 +68,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("wisata");
-  const [data, setData] = useState({ wisata: [], umkm: [], gallery: [], anggota: [] });
+  const [data, setData] = useState({ wisata: [], umkm: [], gallery: [], news: [], anggota: [], programs: [], config: [], pesan: [] });
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({ open: false, mode: "add", item: null });
   const [formData, setFormData] = useState({});
@@ -83,6 +76,31 @@ export default function AdminPage() {
   const [savingForm, setSavingForm] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [toast, setToast] = useState(null);
+
+  // State khusus kontak KKN
+  const [kontakData, setKontakData] = useState({
+    email: "",
+    tiktok: "",
+    instagram: ""
+  });
+  const [savingKontak, setSavingKontak] = useState(false);
+
+  // Save kontak KKN
+  const handleSaveKontak = async (e) => {
+    e.preventDefault();
+    setSavingKontak(true);
+    try {
+      await setDoc(doc(db, "config", "kontak"), {
+        ...kontakData,
+        updatedAt: serverTimestamp()
+      });
+      showToast("✅ Kontak KKN berhasil disimpan!");
+    } catch (err) {
+      showToast("Gagal menyimpan: " + err.message, "danger");
+    } finally {
+      setSavingKontak(false);
+    }
+  };
 
   // Auth state
   useEffect(() => {
@@ -92,15 +110,35 @@ export default function AdminPage() {
 
   // Fetch data for active tab
   const fetchData = useCallback(async (tab) => {
+    if (tab === "kontak") {
+      setLoading(true);
+      try {
+        const docRef = doc(db, "config", "kontak");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setKontakData(docSnap.data());
+        }
+      } catch (err) {
+        // fail silently
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       const colName = TABS.find(t => t.key === tab)?.collection || tab;
-      // Use appropriate sort field per collection
-      const sortField =
-        tab === "anggota" ? "nama" :
-        tab === "gallery" ? "title" :
-        "name";
-      const q = query(collection(db, colName), orderBy(sortField, "asc"));
+      let q;
+      if (tab === "pesan") {
+        q = query(collection(db, colName), orderBy("createdAt", "desc"));
+      } else {
+        const sortField =
+          tab === "anggota" || tab === "programs" ? "urutan" :
+          tab === "gallery" ? "title" :
+          "name";
+        q = query(collection(db, colName), orderBy(sortField, "asc"));
+      }
       const snap = await getDocs(q).catch(() =>
         getDocs(collection(db, colName))
       );
@@ -152,7 +190,7 @@ export default function AdminPage() {
     setFormError("");
     const fields = FIELD_CONFIGS[activeTab];
     for (const f of fields) {
-      if (f.required && !formData[f.key]?.trim()) {
+      if (f.required && !String(formData[f.key] ?? "").trim()) {
         setFormError(`Field "${f.label}" wajib diisi.`);
         return;
       }
@@ -161,13 +199,17 @@ export default function AdminPage() {
     setSavingForm(true);
     const colName = TABS.find(t => t.key === activeTab)?.collection || activeTab;
     try {
+      // Convert urutan to number if applicable
+      const payload = { ...formData };
+      if (payload.urutan !== undefined) payload.urutan = Number(payload.urutan);
+
       if (modal.mode === "add") {
-        await addDoc(collection(db, colName), { ...formData, createdAt: serverTimestamp() });
+        await addDoc(collection(db, colName), { ...payload, createdAt: serverTimestamp() });
         showToast("✅ Data berhasil ditambahkan!");
       } else {
-        const ref = doc(db, colName, modal.item.id);
-        const { id, ...rest } = formData;
-        await updateDoc(ref, { ...rest, updatedAt: serverTimestamp() });
+        const docRef = doc(db, colName, modal.item.id);
+        const { id, ...rest } = payload;
+        await updateDoc(docRef, { ...rest, updatedAt: serverTimestamp() });
         showToast("✅ Data berhasil diperbarui!");
       }
       closeModal();
@@ -252,104 +294,201 @@ export default function AdminPage() {
               {TABS.find(t => t.key === activeTab)?.label}
             </h1>
             <p className={styles.pageDesc}>
-              {currentData.length} data tersimpan di database
+              {activeTab === "kontak" ? "Kelola akun sosial media KKN" :
+               activeTab === "pesan" ? `${(data.pesan || []).length} pesan masuk dari pengunjung` :
+               `${currentData.length} data tersimpan di database`}
             </p>
           </div>
-          <button className={styles.addBtn} onClick={openAdd} id={`btn-add-${activeTab}`}>
-            + Tambah Data
-          </button>
+          {activeTab !== "kontak" && activeTab !== "pesan" && (
+            <button className={styles.addBtn} onClick={openAdd} id={`btn-add-${activeTab}`}>
+              + Tambah Data
+            </button>
+          )}
         </header>
 
-        {/* Table */}
-        {loading ? (
-          <div className={styles.loadingTable}>
-            <div className={styles.loadingSpinner} />
-            <p>Memuat data...</p>
+        {/* Special: Kontak KKN Form */}
+        {activeTab === "kontak" ? (
+          <div className={styles.kontakPanel}>
+            <form onSubmit={handleSaveKontak} className={styles.kontakForm}>
+              <div className={styles.kontakField}>
+                <label className={styles.kontakLabel}>✉️ Email KKN</label>
+                <input
+                  type="email"
+                  className={styles.kontakInput}
+                  placeholder="Masukkan email KKN..."
+                  value={kontakData.email || ""}
+                  onChange={(e) => setKontakData(prev => ({ ...prev, email: e.target.value }))}
+                  id="kontak-email"
+                />
+              </div>
+              <div className={styles.kontakField}>
+                <label className={styles.kontakLabel}>📸 Username Instagram (tanpa @)</label>
+                <input
+                  type="text"
+                  className={styles.kontakInput}
+                  placeholder="cth: kkn124bojong"
+                  value={kontakData.instagram || ""}
+                  onChange={(e) => setKontakData(prev => ({ ...prev, instagram: e.target.value }))}
+                  id="kontak-instagram"
+                />
+              </div>
+              <div className={styles.kontakField}>
+                <label className={styles.kontakLabel}>🎵 Username TikTok (tanpa @)</label>
+                <input
+                  type="text"
+                  className={styles.kontakInput}
+                  placeholder="cth: kkn124bojong"
+                  value={kontakData.tiktok || ""}
+                  onChange={(e) => setKontakData(prev => ({ ...prev, tiktok: e.target.value }))}
+                  id="kontak-tiktok"
+                />
+              </div>
+              <div className={styles.kontakPreview}>
+                <p className={styles.kontakPreviewTitle}>👁️ Preview Link:</p>
+                {kontakData.email && <p>✉️ <a href={`mailto:${kontakData.email}`} style={{color:"#4ecca3"}}>{kontakData.email}</a></p>}
+                {kontakData.instagram && <p>📸 <a href={`https://instagram.com/${kontakData.instagram}`} target="_blank" rel="noopener noreferrer" style={{color:"#4ecca3"}}>instagram.com/{kontakData.instagram}</a></p>}
+                {kontakData.tiktok && <p>🎵 <a href={`https://tiktok.com/@${kontakData.tiktok}`} target="_blank" rel="noopener noreferrer" style={{color:"#4ecca3"}}>tiktok.com/@{kontakData.tiktok}</a></p>}
+              </div>
+              <button type="submit" className={styles.saveBtn} disabled={savingKontak} id="btn-save-kontak">
+                {savingKontak ? <><span className={styles.spinner} /> Menyimpan...</> : "💾 Simpan Kontak KKN"}
+              </button>
+            </form>
           </div>
-        ) : currentData.length === 0 ? (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>📭</div>
-            <h3>Belum ada data</h3>
-            <p>Klik tombol "Tambah Data" untuk menambahkan data baru.</p>
-            <button className={styles.addBtnEmpty} onClick={openAdd}>+ Tambah Data Pertama</button>
-          </div>
-        ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  {activeTab === "anggota" ? (
-                    <>
-                      <th>Nama Lengkap</th>
-                      <th>Prodi</th>
-                      <th>Divisi</th>
-                      <th>Instagram</th>
-                    </>
-                  ) : (
-                    FIELD_CONFIGS[activeTab].slice(0, 3).map(f => (
-                      <th key={f.key}>{f.label}</th>
-                    ))
-                  )}
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.map((item, i) => (
-                  <tr key={item.id}>
-                    <td className={styles.tdNo}>{i + 1}</td>
-                    {activeTab === "anggota" ? (
-                      <>
-                        <td className={styles.tdContent}><strong>{item.nama || "-"}</strong></td>
-                        <td className={styles.tdContent}>{item.prodi || "-"}</td>
-                        <td className={styles.tdContent}>
-                          <span className={styles.divisiTag}>{item.divisi || "-"}</span>
-                        </td>
-                        <td className={styles.tdContent}>
-                          {item.instagram ? (
-                            <a
-                              href={`https://instagram.com/${item.instagram.replace("@", "")}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={styles.igLink}
-                            >
-                              @{item.instagram.replace("@", "")}
-                            </a>
-                          ) : (
-                            <span className={styles.noIg}>—</span>
-                          )}
-                        </td>
-                      </>
-                    ) : (
-                      FIELD_CONFIGS[activeTab].slice(0, 3).map(f => (
-                        <td key={f.key} className={styles.tdContent}>
-                          {f.type === "textarea"
-                            ? (item[f.key] || "-").substring(0, 60) + ((item[f.key] || "").length > 60 ? "..." : "")
-                            : item[f.key] || "-"}
-                        </td>
-                      ))
-                    )}
-                    <td className={styles.tdActions}>
-                      <button
-                        className={styles.editBtn}
-                        onClick={() => openEdit(item)}
-                        id={`btn-edit-${item.id}`}
-                      >
-                        ✏️ Edit
-                      </button>
+        ) : activeTab === "pesan" ? (
+          /* Special: Pesan Masuk Inbox */
+          loading ? (
+            <div className={styles.loadingTable}>
+              <div className={styles.loadingSpinner} />
+              <p>Memuat pesan...</p>
+            </div>
+          ) : (data.pesan || []).length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>📭</div>
+              <h3>Belum ada pesan masuk</h3>
+              <p>Pesan dari pengunjung akan muncul di sini.</p>
+            </div>
+          ) : (
+            <div className={styles.pesanList}>
+              {(data.pesan || []).map((pesan) => (
+                <div key={pesan.id} className={styles.pesanCard}>
+                  <div className={styles.pesanHeader}>
+                    <div className={styles.pesanAvatar}>{(pesan.nama || "?")[0].toUpperCase()}</div>
+                    <div className={styles.pesanMeta}>
+                      <strong className={styles.pesanNama}>{pesan.nama || "—"}</strong>
+                      <span className={styles.pesanEmail}>{pesan.email || "—"}</span>
+                    </div>
+                    <div className={styles.pesanActions}>
+                      {pesan.email && (
+                        <a href={`mailto:${pesan.email}`} className={styles.replyBtn}>✉️ Balas</a>
+                      )}
                       <button
                         className={styles.deleteBtn}
-                        onClick={() => setDeleteConfirm(item.id)}
-                        id={`btn-delete-${item.id}`}
+                        onClick={() => setDeleteConfirm(pesan.id)}
+                        id={`btn-delete-pesan-${pesan.id}`}
                       >
                         🗑️ Hapus
                       </button>
-                    </td>
+                    </div>
+                  </div>
+                  <div className={styles.pesanSubjek}>{pesan.subjek || "(Tanpa Subjek)"}</div>
+                  <p className={styles.pesanIsi}>{pesan.pesan || "—"}</p>
+                  {pesan.createdAt && (
+                    <span className={styles.pesanWaktu}>
+                      {pesan.createdAt?.toDate?.()?.toLocaleString("id-ID") || "—"}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )
+        ) : (
+          /* Default: Table for wisata/umkm/gallery/anggota */
+          loading ? (
+            <div className={styles.loadingTable}>
+              <div className={styles.loadingSpinner} />
+              <p>Memuat data...</p>
+            </div>
+          ) : currentData.length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>📭</div>
+              <h3>Belum ada data</h3>
+              <p>Klik tombol "Tambah Data" untuk menambahkan data baru.</p>
+              <button className={styles.addBtnEmpty} onClick={openAdd}>+ Tambah Data Pertama</button>
+            </div>
+          ) : (
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    {activeTab === "anggota" ? (
+                      <>
+                        <th>No. Urut</th>
+                        <th>Foto</th>
+                        <th>Nama Lengkap</th>
+                        <th>Divisi</th>
+                      </>
+                    ) : (
+                      FIELD_CONFIGS[activeTab]?.slice(0, 3).map(f => (
+                        <th key={f.key}>{f.label}</th>
+                      ))
+                    )}
+                    <th>Aksi</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {currentData.map((item, i) => (
+                    <tr key={item.id}>
+                      <td className={styles.tdNo}>{i + 1}</td>
+                      {activeTab === "anggota" ? (
+                        <>
+                          <td className={styles.tdContent} style={{width:"50px"}}><strong>{item.urutan ?? "-"}</strong></td>
+                          <td className={styles.tdContent} style={{width:"60px"}}>
+                            {item.foto ? (
+                              <img
+                                src={`/image/anggota/${item.foto}.jpg`}
+                                alt={item.nama}
+                                style={{width:"40px",height:"40px",borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(26,127,90,0.4)"}}
+                                onError={(e)=>{e.target.style.display="none";}}
+                              />
+                            ) : <span style={{color:"rgba(255,255,255,0.3)"}}>—</span>}
+                          </td>
+                          <td className={styles.tdContent}><strong>{item.nama || "-"}</strong></td>
+                          <td className={styles.tdContent}>
+                            <span className={styles.divisiTag}>{item.divisi || "-"}</span>
+                          </td>
+                        </>
+                      ) : (
+                        FIELD_CONFIGS[activeTab]?.slice(0, 3).map(f => (
+                          <td key={f.key} className={styles.tdContent}>
+                            {f.type === "textarea"
+                              ? (item[f.key] || "-").substring(0, 60) + ((item[f.key] || "").length > 60 ? "..." : "")
+                              : item[f.key] || "-"}
+                          </td>
+                        ))
+                      )}
+                      <td className={styles.tdActions}>
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => openEdit(item)}
+                          id={`btn-edit-${item.id}`}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => setDeleteConfirm(item.id)}
+                          id={`btn-delete-${item.id}`}
+                        >
+                          🗑️ Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
       </main>
 
@@ -407,6 +546,25 @@ export default function AdminPage() {
                   )}
                 </div>
               ))}
+
+              {/* Foto preview live — only for Anggota tab */}
+              {activeTab === "anggota" && formData.foto && (
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>👁️ Preview Foto</label>
+                  <div className={styles.fotoPreviewBox}>
+                    <img
+                      src={`/image/anggota/${formData.foto.trim()}.jpg`}
+                      alt="Preview"
+                      className={styles.fotoPreviewImg}
+                      onError={(e) => { e.target.src = ""; e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                    />
+                    <div className={styles.fotoPreviewFallback} style={{display:"none"}}>
+                      <span>❌ File tidak ditemukan</span>
+                      <small>/image/anggota/{formData.foto.trim()}.jpg</small>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className={styles.modalActions}>
                 <button type="button" className={styles.cancelBtn} onClick={closeModal}>

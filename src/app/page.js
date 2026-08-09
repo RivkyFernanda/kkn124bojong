@@ -4,6 +4,7 @@ import About from "@/components/About";
 import Anggota from "@/components/Anggota";
 import Wisata from "@/components/Wisata";
 import Umkm from "@/components/Umkm";
+import News from "@/components/News";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
 
@@ -16,6 +17,7 @@ export default function Home() {
       <Anggota />
       <Wisata />
       <Umkm />
+      <News />
       <Gallery />
       <Footer />
     </main>

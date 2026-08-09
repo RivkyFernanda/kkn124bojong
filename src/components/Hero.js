@@ -56,6 +56,9 @@ export default function Hero() {
 
   return (
     <section id="beranda" className={styles.hero}>
+      {/* Background Image with Transparency */}
+      <div className={styles.heroBgImage} />
+
       {/* Animated Particles */}
       <canvas ref={particlesRef} className={styles.particles} aria-hidden="true" />
 
@@ -83,21 +86,27 @@ export default function Hero() {
           dan hamparan sawah hijau yang memukau di Kecamatan Parigi, Kabupaten Pangandaran.
         </p>
 
-        {/* Stats */}
         <div className={styles.heroStats}>
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}>1</span>
-            <span className={styles.statLabel}>Destinasi Wisata Unggulan</span>
+          <div className={styles.statCard}>
+            <span className={styles.statIcon}>🌿</span>
+            <div>
+              <strong>8+ Program</strong>
+              <p>Unggulan terarah untuk desa</p>
+            </div>
           </div>
-          <div className={styles.statDivider} />
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}>6+</span>
-            <span className={styles.statLabel}>Produk UMKM Lokal</span>
+          <div className={styles.statCard}>
+            <span className={styles.statIcon}>🤝</span>
+            <div>
+              <strong>Tim Solid</strong>
+              <p>Mahasiswa KKN siap membantu</p>
+            </div>
           </div>
-          <div className={styles.statDivider} />
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}>124</span>
-            <span className={styles.statLabel}>Anggota KKN Berdedikasi</span>
+          <div className={styles.statCard}>
+            <span className={styles.statIcon}>✨</span>
+            <div>
+              <strong>Premium</strong>
+              <p>Experience modern dan elegan</p>
+            </div>
           </div>
         </div>
 
@@ -115,37 +124,6 @@ export default function Hero() {
           >
             <span>🛍️</span> Lihat UMKM
           </button>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className={styles.scrollIndicator} onClick={() => handleScroll("profil")}>
-        <div className={styles.scrollDot} />
-        <span>Scroll</span>
-      </div>
-
-      {/* Floating Cards */}
-      <div className={styles.floatingCards}>
-        <div className={`${styles.floatCard} ${styles.floatCard1}`}>
-          <span className={styles.floatIcon}>🏄‍♂️</span>
-          <div>
-            <strong>Citumang</strong>
-            <p>Body Rafting</p>
-          </div>
-        </div>
-        <div className={`${styles.floatCard} ${styles.floatCard2}`}>
-          <span className={styles.floatIcon}>⚔️</span>
-          <div>
-            <strong>Golok Bojong</strong>
-            <p>Kerajinan Tradisional</p>
-          </div>
-        </div>
-        <div className={`${styles.floatCard} ${styles.floatCard3}`}>
-          <span className={styles.floatIcon}>🌾</span>
-          <div>
-            <strong>Persawahan</strong>
-            <p>Alam yang Asri</p>
-          </div>
         </div>
       </div>
 

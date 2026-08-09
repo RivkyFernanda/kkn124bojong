@@ -1,8 +1,12 @@
 .gallery {
-  background: linear-gradient(180deg, #0d1b2a 0%, #0a1118 100%);
+  background: linear-gradient(180deg, rgba(7,17,28,0.98) 0%, rgba(15,23,42,0.95) 100%);
   padding: 6rem 2rem;
   position: relative;
   overflow: hidden;
+}
+
+:root[data-theme="light"] .gallery {
+  background: linear-gradient(180deg, #f8fbfe 0%, #eef4f9 100%);
 }
 
 .bgBlob {

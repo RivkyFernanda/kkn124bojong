@@ -7,37 +7,27 @@
 
 /* ---- CSS Custom Properties (Design Tokens) ---- */
 :root {
-  /* Color Palette - Nature Inspired */
-  --color-primary: #1a7f5a;       /* Deep emerald green (sawah) */
-  --color-primary-light: #27ae75; /* Bright emerald */
-  --color-primary-dark: #0f5c40;  /* Dark forest green */
-  
-  --color-accent: #00b4d8;        /* Bright cyan (sungai Citumang) */
-  --color-accent-light: #90e0ef;  /* Light blue water */
-  --color-accent-dark: #0077b6;   /* Deep ocean blue */
-  
-  --color-warm: #c07c3b;          /* Warm brown (kayu, kerajinan) */
-  --color-warm-light: #e09a5a;    /* Light wood tone */
-  --color-warm-dark: #8b5e2f;     /* Dark mahogany */
-  
-  --color-sand: #f5ead6;          /* Sand/cream */
-  --color-earth: #8b6e4e;         /* Earth tone */
-
-  /* Neutrals */
-  --color-dark: #0d1b2a;          /* Deep dark navy */
-  --color-dark-2: #1b2e3c;        /* Card dark */
-  --color-dark-3: #243447;        /* Section dark */
-  --color-mid: #4a6178;           /* Muted dark */
-  --color-light: #e8f4f0;         /* Light green-tinted white */
+  --color-primary: #1a7f5a;
+  --color-primary-light: #27ae75;
+  --color-primary-dark: #0f5c40;
+  --color-accent: #00b4d8;
+  --color-accent-light: #90e0ef;
+  --color-accent-dark: #0077b6;
+  --color-warm: #c07c3b;
+  --color-warm-light: #e09a5a;
+  --color-warm-dark: #8b5e2f;
+  --color-sand: #f5ead6;
+  --color-earth: #8b6e4e;
+  --color-dark: #07111c;
+  --color-dark-2: #0f172a;
+  --color-dark-3: #17263b;
+  --color-mid: #4a6178;
+  --color-light: #e8f4f0;
   --color-white: #ffffff;
-  --color-text: #1a2e3b;          /* Primary text */
-  --color-text-muted: #5a7a8a;    /* Muted text */
-
-  /* Typography */
+  --color-text: #1a2e3b;
+  --color-text-muted: #5a7a8a;
   --font-primary: 'Outfit', 'Segoe UI', sans-serif;
   --font-serif: 'Merriweather', Georgia, serif;
-  
-  /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -46,39 +36,52 @@
   --space-2xl: 3rem;
   --space-3xl: 4rem;
   --space-4xl: 6rem;
-
-  /* Border Radius */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 32px;
   --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.18);
-  --shadow-glow-green: 0 0 30px rgba(26, 127, 90, 0.3);
-  --shadow-glow-cyan: 0 0 30px rgba(0, 180, 216, 0.3);
-  --shadow-glow-warm: 0 0 30px rgba(192, 124, 59, 0.3);
-
-  /* Transitions */
+  --shadow-sm: 0 8px 24px rgba(2, 8, 23, 0.12);
+  --shadow-md: 0 16px 54px rgba(2, 8, 23, 0.2);
+  --shadow-lg: 0 28px 80px rgba(2, 8, 23, 0.28);
+  --shadow-glow-green: 0 0 35px rgba(26, 127, 90, 0.28);
+  --shadow-glow-cyan: 0 0 35px rgba(0, 180, 216, 0.24);
+  --shadow-glow-warm: 0 0 35px rgba(192, 124, 59, 0.24);
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease;
-
-  /* Glass morphism */
   --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-bg-dark: rgba(13, 27, 42, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --glass-blur: blur(20px);
-
-  /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #0d1b2a 0%, #1b2e3c 40%, #0f5c40 100%);
+  --glass-bg-dark: rgba(7, 17, 28, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-blur: blur(22px);
+  --gradient-hero: linear-gradient(135deg, #07111c 0%, #0f172a 45%, #103f31 100%);
   --gradient-green: linear-gradient(135deg, #1a7f5a, #27ae75);
   --gradient-water: linear-gradient(135deg, #0077b6, #00b4d8);
   --gradient-warm: linear-gradient(135deg, #8b5e2f, #c07c3b);
-  --gradient-section: linear-gradient(180deg, #0d1b2a 0%, #1b2e3c 100%);
+  --gradient-section: linear-gradient(180deg, #07111c 0%, #10223a 100%);
+  --bg-page: #07111c;
+  --bg-surface: #0f172a;
+  --bg-surface-2: #111c2d;
+  --bg-card: rgba(255,255,255,0.08);
+  --bg-card-strong: rgba(255,255,255,0.12);
+  --border-soft: rgba(255,255,255,0.12);
+  --text-primary: #f8fafc;
+  --text-secondary: rgba(248,250,252,0.76);
+  --text-muted: rgba(248,250,252,0.55);
+  --shadow-strong: 0 24px 70px rgba(2,8,23,0.34);
+}
+
+:root[data-theme="light"] {
+  --bg-page: #f4f7fb;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #eef4f9;
+  --bg-card: rgba(255,255,255,0.86);
+  --bg-card-strong: rgba(255,255,255,0.95);
+  --border-soft: rgba(15,23,42,0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --shadow-strong: 0 24px 70px rgba(15,23,42,0.12);
 }
 
 /* ---- CSS Reset & Base ---- */
@@ -98,12 +101,47 @@ html {
 
 body {
   font-family: var(--font-primary);
-  color: var(--color-text);
-  background-color: var(--color-dark);
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at top left, rgba(26,127,90,0.18), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(0,180,216,0.16), transparent 24%),
+    var(--bg-page);
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.25;
+  z-index: -1;
+}
+
+body::before {
+  top: -8rem;
+  left: -6rem;
+  background: rgba(26,127,90,0.35);
+}
+
+body::after {
+  right: -8rem;
+  bottom: -6rem;
+  background: rgba(0,180,216,0.3);
+}
+
+::selection {
+  background: rgba(26,127,90,0.3);
+  color: #fff;
 }
 
 img {
@@ -163,12 +201,12 @@ input, textarea, select {
 
 .section-dark {
   background: var(--gradient-section);
-  color: var(--color-white);
+  color: var(--text-primary);
 }
 
 .section-light {
-  background: #f0f7f4;
-  color: var(--color-text);
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .container {

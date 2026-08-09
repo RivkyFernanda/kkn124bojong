@@ -9,6 +9,7 @@ const navLinks = [
   { href: "#anggota", label: "Anggota" },
   { href: "#wisata", label: "Wisata" },
   { href: "#umkm", label: "UMKM" },
+  { href: "#berita", label: "Berita" },
   { href: "#galeri", label: "Galeri" },
   { href: "#kontak", label: "Kontak" },
 ];
@@ -50,7 +51,11 @@ export default function Navbar() {
         {/* Logo */}
         <div className={styles.logo}>
           <div className={styles.logoIcon}>
-            <span>🌿</span>
+            <img 
+              src="/image/logo-KKN-124.png" 
+              alt="Logo KKN 124" 
+              className={styles.logoImg}
+            />
           </div>
           <div className={styles.logoText}>
             <span className={styles.logoMain}>KKN 124</span>

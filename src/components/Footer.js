@@ -1,15 +1,75 @@
+"use client";
+import { useState, useEffect } from "react";
+import { collection, addDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  
+  // Contact details state from Firestore config
+  const [socials, setSocials] = useState({
+    email: "kkn124bojong@gmail.com",
+    tiktok: "kkn124bojong",
+    instagram: "kkn124bojong"
+  });
 
-  const navLinks = [
-    { href: "#beranda", label: "Beranda" },
-    { href: "#profil", label: "Profil Desa" },
-    { href: "#wisata", label: "Wisata" },
-    { href: "#umkm", label: "UMKM" },
-    { href: "#galeri", label: "Galeri" },
-  ];
+  // Form states
+  const [formData, setFormData] = useState({
+    nama: "",
+    email: "",
+    subjek: "",
+    pesan: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  // Fetch KKN socials config from Firestore
+  useEffect(() => {
+    async function fetchSocials() {
+      try {
+        const docRef = doc(db, "config", "kontak");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setSocials(docSnap.data());
+        }
+      } catch (err) {
+        // Fallback to default
+      }
+    }
+    fetchSocials();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess(false);
+
+    if (!formData.nama.trim() || !formData.email.trim() || !formData.subjek.trim() || !formData.pesan.trim()) {
+      setError("Semua field wajib diisi.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "pesan"), {
+        ...formData,
+        createdAt: serverTimestamp()
+      });
+      setSuccess(true);
+      setFormData({ nama: "", email: "", subjek: "", pesan: "" });
+    } catch (err) {
+      setError("Gagal mengirim pesan: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <footer id="kontak" className={styles.footer}>
@@ -19,7 +79,9 @@ export default function Footer() {
             {/* Brand */}
             <div className={styles.brandCol}>
               <div className={styles.brand}>
-                <div className={styles.brandIcon}>🌿</div>
+                <div className={styles.brandIcon}>
+                  <img src="/image/logo-KKN-124.png" alt="Logo KKN 124" className={styles.brandLogo} />
+                </div>
                 <div>
                   <div className={styles.brandName}>KKN 124 Desa Bojong</div>
                   <div className={styles.brandSub}>UIN Saizu Purwokerto</div>
@@ -31,31 +93,38 @@ export default function Footer() {
                 Kabupaten Pangandaran.
               </p>
               <div className={styles.socialLinks}>
-                <a href="#" className={styles.socialBtn} aria-label="Instagram KKN 124">
-                  <span>📸</span>
-                </a>
-                <a href="#" className={styles.socialBtn} aria-label="YouTube KKN 124">
-                  <span>▶️</span>
-                </a>
-                <a href="#" className={styles.socialBtn} aria-label="WhatsApp KKN 124">
-                  <span>💬</span>
-                </a>
+                {socials.instagram && (
+                  <a
+                    href={`https://instagram.com/${socials.instagram.replace("@", "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialBtn}
+                    aria-label="Instagram KKN 124"
+                  >
+                    <span>�</span>
+                  </a>
+                )}
+                {socials.tiktok && (
+                  <a
+                    href={`https://tiktok.com/@${socials.tiktok.replace("@", "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialBtn}
+                    aria-label="TikTok KKN 124"
+                  >
+                    <span>🎵</span>
+                  </a>
+                )}
+                {socials.email && (
+                  <a
+                    href={`mailto:${socials.email}`}
+                    className={styles.socialBtn}
+                    aria-label="Email KKN 124"
+                  >
+                    <span>✉️</span>
+                  </a>
+                )}
               </div>
-            </div>
-
-            {/* Quick Links */}
-            <div className={styles.linksCol}>
-              <h3 className={styles.colTitle}>Navigasi Cepat</h3>
-              <ul className={styles.linkList}>
-                {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href} className={styles.footerLink}>
-                      <span className={styles.linkArrow}>→</span>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             {/* Contact */}
@@ -77,33 +146,81 @@ export default function Footer() {
                   </div>
                 </div>
                 <div className={styles.contactItem}>
-                  <span className={styles.contactIcon}>🏄‍♂️</span>
+                  <span className={styles.contactIcon}>✉️</span>
                   <div>
-                    <strong>Wisata Unggulan</strong>
-                    <p>Citumang Body Rafting<br />Parigi, Pangandaran</p>
+                    <strong>Email KKN</strong>
+                    <p>{socials.email || "kkn124bojong@gmail.com"}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Info */}
+            {/* Form Kirim Pesan */}
             <div className={styles.infoCol}>
-              <h3 className={styles.colTitle}>Info UMKM Unggulan</h3>
-              <div className={styles.umkmList}>
-                {[
-                  { icon: "⚔️", name: "Kerajinan Golok" },
-                  { icon: "🥁", name: "Gendang Tradisional" },
-                  { icon: "🎭", name: "Wayang Golek" },
-                  { icon: "🥮", name: "Opak Khas Bojong" },
-                  { icon: "🍌", name: "Seriping Pisang" },
-                  { icon: "🧺", name: "Kerajinan Hata" },
-                ].map((u, i) => (
-                  <div key={i} className={styles.umkmItem}>
-                    <span>{u.icon}</span>
-                    <span>{u.name}</span>
+              <h3 className={styles.colTitle}>Kirim Pesan</h3>
+              <form onSubmit={handleSubmit} className={styles.contactForm}>
+                {success && (
+                  <div className={styles.alertSuccess}>
+                    ✅ Pesan berhasil dikirim!
                   </div>
-                ))}
-              </div>
+                )}
+                {error && (
+                  <div className={styles.alertError}>
+                    ❌ {error}
+                  </div>
+                )}
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    name="nama"
+                    placeholder="Nama Lengkap"
+                    value={formData.nama}
+                    onChange={handleInputChange}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Alamat Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    name="subjek"
+                    placeholder="Subjek Pesan"
+                    value={formData.subjek}
+                    onChange={handleInputChange}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <textarea
+                    name="pesan"
+                    placeholder="Tulis pesan Anda..."
+                    rows="3"
+                    value={formData.pesan}
+                    onChange={handleInputChange}
+                    className={styles.formInput}
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={styles.btnSubmit}
+                >
+                  {loading ? "Mengirim..." : "Kirim Pesan ✉️"}
+                </button>
+              </form>
             </div>
           </div>
         </div>

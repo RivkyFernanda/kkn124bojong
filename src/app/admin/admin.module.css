@@ -745,3 +745,356 @@ select.formInput option {
     padding: 1.25rem;
   }
 }
+
+/* ============================================
+   Photo Upload (Anggota)
+   ============================================ */
+.photoUploadArea {
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  overflow: hidden;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.photoUploadArea:hover {
+  border-color: rgba(26, 127, 90, 0.6);
+  background: rgba(26, 127, 90, 0.05);
+}
+
+.photoUploadAreaHasImg {
+  border-color: rgba(26, 127, 90, 0.4);
+  min-height: 160px;
+}
+
+.photoUploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.photoUploadIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.photoUploadText {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.photoUploadHint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.photoPreviewWrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+}
+
+.photoPreviewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photoPreviewOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.photoPreviewWrapper:hover .photoPreviewOverlay {
+  opacity: 1;
+}
+
+/* Progress Bar */
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a7f5a, #4ecca3);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4ecca3;
+  min-width: 36px;
+  text-align: right;
+}
+
+.photoFileName {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #4ecca3;
+  font-weight: 500;
+}
+
+/* ---- Local foto preview (anggota) ---- */
+.fotoPreviewBox {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(26, 127, 90, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  max-height: 180px;
+}
+
+.fotoPreviewImg {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(26, 127, 90, 0.5);
+  display: block;
+  margin: 1rem auto;
+}
+
+.fotoPreviewFallback {
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 1.5rem;
+  color: rgba(239, 83, 80, 0.8);
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+.fotoPreviewFallback small {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: monospace;
+}
+
+/* ============================================
+   Kontak KKN Panel
+   ============================================ */
+.kontakPanel {
+  padding: 2rem;
+  max-width: 600px;
+}
+
+.kontakForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.kontakField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kontakLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+}
+
+.kontakInput {
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.25s ease;
+}
+
+.kontakInput:focus {
+  outline: none;
+  border-color: rgba(78, 204, 163, 0.5);
+  background: rgba(78, 204, 163, 0.06);
+  box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.1);
+}
+
+.kontakInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.kontakPreview {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.kontakPreviewTitle {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.kontakPreview p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.kontakPreview p a {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.kontakPreview p a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   Pesan Masuk Inbox
+   ============================================ */
+.pesanList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pesanCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pesanCard:hover {
+  border-color: rgba(78, 204, 163, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pesanHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.pesanAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a7f5a, #27ae75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.pesanMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.pesanNama {
+  font-size: 0.92rem;
+  color: #fff;
+  font-weight: 700;
+}
+
+.pesanEmail {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pesanActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.replyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(26, 127, 90, 0.15);
+  border: 1px solid rgba(78, 204, 163, 0.3);
+  color: #4ecca3;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.replyBtn:hover {
+  background: rgba(26, 127, 90, 0.3);
+}
+
+.pesanSubjek {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0.4rem;
+}
+
+.pesanIsi {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.7;
+  margin: 0 0 0.625rem;
+  white-space: pre-wrap;
+}
+
+.pesanWaktu {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+}

@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import styles from "./About.module.css";
 
 const highlights = [
@@ -25,17 +27,9 @@ const highlights = [
   },
 ];
 
-const kknMembers = [
-  "Pengembangan Website Desa",
-  "Pendataan UMKM Lokal",
-  "Promosi Wisata Citumang",
-  "Pemberdayaan Masyarakat",
-  "Literasi Digital Warga",
-  "Pemetaan Potensi Desa",
-];
-
 export default function About() {
   const sectionRef = useRef(null);
+  const [programs, setPrograms] = useState([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,6 +46,21 @@ export default function About() {
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const q = query(collection(db, "programs"), orderBy("urutan", "asc"));
+        const snap = await getDocs(q);
+        const items = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setPrograms(items);
+      } catch (error) {
+        console.error("Gagal mengambil program unggulan:", error);
+      }
+    };
+
+    fetchPrograms();
   }, []);
 
   return (
@@ -79,21 +88,18 @@ export default function About() {
         <div className={styles.mainContent}>
           {/* Left: Map Card */}
           <div className={`${styles.mapCard} fade-up`}>
-            <div className={styles.mapVisual}>
-              <div className={styles.mapPin}>
-                <span className={styles.mapPinDot} />
-                <span className={styles.mapPinRing} />
-              </div>
-              <div className={styles.mapLabel}>
-                <strong>Desa Bojong</strong>
-                <span>Kec. Parigi, Kab. Pangandaran</span>
-                <span>Jawa Barat, Indonesia</span>
-              </div>
-              <div className={styles.mapDecorations}>
-                <span className={styles.mapDecItem}>🌊 Sungai Citumang</span>
-                <span className={styles.mapDecItem}>🌾 Area Persawahan</span>
-                <span className={styles.mapDecItem}>🏔️ Perbukitan Parigi</span>
-              </div>
+            <div className={styles.mapVisualContainer}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15814.195159187313!2d108.48705669145695!3d-7.731427670154054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6597a7a1cbfb49%3A0xe54eef71415fbf10!2sBojong%2C%20Parigi%2C%20Pangandaran%20Regency%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1723200000000!5m2!1sen!2sid"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Peta Wilayah Desa Bojong"
+                className={styles.mapIframe}
+              ></iframe>
             </div>
             {/* Info Grid */}
             <div className={styles.infoGrid}>
@@ -144,15 +150,28 @@ export default function About() {
 
         {/* KKN Programs */}
         <div className={`${styles.kknPrograms} fade-up`}>
-          <h3 className={styles.programTitle}>🎯 Program KKN Kelompok 124</h3>
-          <div className={styles.programGrid}>
-            {kknMembers.map((program, i) => (
-              <div key={i} className={styles.programBadge}>
-                <span className={styles.programCheck}>✓</span>
-                {program}
-              </div>
-            ))}
-          </div>
+          <h3 className={styles.programTitle}>🎯 Program Unggulan KKN Kelompok 124</h3>
+          {programs.length > 0 ? (
+            <div className={styles.programGrid}>
+              {programs.map((program, i) => (
+                <div key={program.id || i} className={styles.programBadge}>
+                  <span className={styles.programCheck}>{program.icon || "✨"}</span>
+                  <div>
+                    <strong>{program.title}</strong>
+                    {program.description ? (
+                      <div style={{ marginTop: "4px", fontSize: "0.95rem", color: "rgba(255,255,255,0.75)" }}>
+                        {program.description}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.sectionSubtitle} style={{ marginTop: "12px" }}>
+              Program unggulan akan ditambahkan oleh admin.
+            </p>
+          )}
         </div>
       </div>
     </section>

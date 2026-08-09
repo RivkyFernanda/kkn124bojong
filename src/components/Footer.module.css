@@ -1,6 +1,10 @@
 .footer {
-  background: #070f18;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, #07111c 0%, #0d1724 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .footer {
+  background: linear-gradient(180deg, #f8fbfe 0%, #eaf2f7 100%);
 }
 
 .container {
@@ -16,8 +20,8 @@
 
 .footerGrid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
-  gap: 3rem;
+  grid-template-columns: 1.4fr 1.2fr 1.2fr;
+  gap: 2.4rem;
 }
 
 /* Brand Column */
@@ -29,16 +33,24 @@
 }
 
 .brandIcon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #1a7f5a, #27ae75);
-  border-radius: 14px;
+  width: 54px;
+  height: 54px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 15px rgba(26, 127, 90, 0.4);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.16);
   flex-shrink: 0;
+  overflow: hidden;
+  padding: 0.25rem;
+}
+
+.brandLogo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .brandName {
@@ -69,15 +81,15 @@
 }
 
 .socialBtn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   text-decoration: none;
   transition: all 0.25s ease;
 }
@@ -244,3 +256,89 @@
     text-align: center;
   }
 }
+
+/* Contact Form styles */
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.formGroup {
+  width: 100%;
+}
+
+.formInput {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.formInput:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(78, 204, 163, 0.5);
+  box-shadow: 0 0 10px rgba(78, 204, 163, 0.15);
+}
+
+.formInput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.formInput[rows] {
+  resize: none;
+}
+
+.btnSubmit {
+  padding: 0.8rem 1.35rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a7f5a, #27ae75);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(26, 127, 90, 0.3);
+  text-align: center;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26, 127, 90, 0.45);
+}
+
+.btnSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.alertSuccess {
+  padding: 0.6rem 0.875rem;
+  border-radius: 8px;
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #2ecc71;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.alertError {
+  padding: 0.6rem 0.875rem;
+  border-radius: 8px;
+  background: rgba(231, 76, 60, 0.15);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
