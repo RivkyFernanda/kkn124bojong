@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import styles from "./News.module.css";
 
 export default function News() {
+  const router = useRouter();
   const [items, setItems] = useState([]);
-  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -78,7 +79,7 @@ export default function News() {
                   <h3 className={styles.cardTitle}>{item.title}</h3>
                   <p className={styles.cardDesc}>{truncate(item.description, 140)}</p>
                   <div className={styles.cardActions}>
-                    <button className={styles.readMoreBtn} onClick={() => setSelected(item)}>Baca Selengkapnya</button>
+                    <button className={styles.readMoreBtn} onClick={() => router.push(`/news/${item.id}`)}>Baca Selengkapnya</button>
                   </div>
                   <div className={styles.cardMeta}>
                     {(item.category || "").split(",").map((c) => c.trim()).filter(Boolean).slice(0, 3).map((cat) => (
@@ -92,27 +93,6 @@ export default function News() {
         )}
       </div>
 
-      {selected && (
-        <div className={styles.modalOverlay} onClick={() => setSelected(null)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.closeBtn} onClick={() => setSelected(null)}>✕</button>
-            <h3 className={styles.modalTitle}>{selected.title}</h3>
-            <p className={styles.modalDesc}>{selected.description}</p>
-            {selected.bodyImageUrl && (
-              <div className={styles.bodyImageWrap}>
-                <img src={selected.bodyImageUrl} alt={selected.title} className={styles.bodyImage} />
-              </div>
-            )}
-            {selected.category && (
-              <div className={styles.modalTags}>
-                {(selected.category || "").split(",").map((c) => c.trim()).filter(Boolean).map((cat) => (
-                  <span key={cat} className={styles.metaTag}>{cat}</span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </section>
   );
 }
