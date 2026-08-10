@@ -101,7 +101,7 @@ export default function Footer() {
                     className={styles.socialBtn}
                     aria-label="Instagram KKN 124"
                   >
-                    <span>�</span>
+                    <img src="/image/instagram.jpg" alt="Instagram" />
                   </a>
                 )}
                 {socials.tiktok && (
@@ -112,7 +112,7 @@ export default function Footer() {
                     className={styles.socialBtn}
                     aria-label="TikTok KKN 124"
                   >
-                    <span>🎵</span>
+                    <img src="/image/tiktok.png" alt="TikTok" />
                   </a>
                 )}
                 {socials.email && (
@@ -121,7 +121,7 @@ export default function Footer() {
                     className={styles.socialBtn}
                     aria-label="Email KKN 124"
                   >
-                    <span>✉️</span>
+                    <img src="/image/email.png" alt="Email" />
                   </a>
                 )}
               </div>

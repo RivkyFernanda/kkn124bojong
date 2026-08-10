@@ -94,6 +94,13 @@
   transition: all 0.25s ease;
 }
 
+.socialBtn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
 .socialBtn:hover {
   background: rgba(26, 127, 90, 0.2);
   border-color: rgba(78, 204, 163, 0.35);

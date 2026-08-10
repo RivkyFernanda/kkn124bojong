@@ -28,6 +28,11 @@ export default function News() {
     return [...new Set(all)].slice(0, 6);
   }, [items]);
 
+  const truncate = (text, len = 120) => {
+    if (!text) return "";
+    return text.length > len ? text.slice(0, len).trim() + "…" : text;
+  };
+
   return (
     <section id="berita" className={styles.newsSection}>
       <div className={styles.container}>
@@ -61,7 +66,7 @@ export default function News() {
         ) : (
           <div className={styles.grid}>
             {items.map((item) => (
-              <article key={item.id} className={styles.card} onClick={() => setSelected(item)}>
+              <article key={item.id} className={styles.card}>
                 <div className={styles.thumbWrap}>
                   {item.thumbnailUrl ? (
                     <img src={item.thumbnailUrl} alt={item.title} className={styles.thumb} loading="lazy" />
@@ -71,7 +76,10 @@ export default function News() {
                 </div>
                 <div className={styles.cardBody}>
                   <h3 className={styles.cardTitle}>{item.title}</h3>
-                  <p className={styles.cardDesc}>{item.description}</p>
+                  <p className={styles.cardDesc}>{truncate(item.description, 140)}</p>
+                  <div className={styles.cardActions}>
+                    <button className={styles.readMoreBtn} onClick={() => setSelected(item)}>Baca Selengkapnya</button>
+                  </div>
                   <div className={styles.cardMeta}>
                     {(item.category || "").split(",").map((c) => c.trim()).filter(Boolean).slice(0, 3).map((cat) => (
                       <span key={cat} className={styles.metaTag}>{cat}</span>

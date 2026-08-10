@@ -192,7 +192,7 @@ input, textarea, select {
 
 .section-dark {
   background: var(--gradient-section);
-  color: var(--text-primary);
+  color: var(--color-white);
 }
 
 .section-light {

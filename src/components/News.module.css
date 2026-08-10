@@ -107,6 +107,24 @@
   padding: 1.2rem 1.2rem 1.4rem;
 }
 
+.cardActions {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.readMoreBtn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(78,204,163,0.12);
+  color: #4ecca3;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid rgba(78,204,163,0.18);
+}
+
+.readMoreBtn:hover { background: rgba(78,204,163,0.16); transform: translateY(-2px); }
+
 .cardTitle {
   font-size: 1.08rem;
   font-weight: 700;
