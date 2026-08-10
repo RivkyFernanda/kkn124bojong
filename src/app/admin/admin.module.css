@@ -557,6 +557,48 @@ select.formInput option {
   background: #0d1b2a;
 }
 
+.uploadGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.uploadHint {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.imagePreview {
+  margin-top: 0.75rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 100%;
+  max-width: 320px;
+}
+
+.imagePreview img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
+.formInfo {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(78, 204, 163, 0.12);
+  border: 1px solid rgba(78, 204, 163, 0.2);
+  font-size: 0.9rem;
+}
+
+.formInfoLoading {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* Modal Actions */
 .modalActions {
   display: flex;

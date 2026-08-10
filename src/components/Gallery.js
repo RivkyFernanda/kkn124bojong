@@ -106,7 +106,6 @@ export default function Gallery() {
                   }}
                 />
                 <div className={styles.itemOverlay} />
-                <div className={styles.itemEmoji}>{item.category ? "📷" : "📸"}</div>
                 <div className={styles.itemContent}>
                   <h3 className={styles.itemTitle}>{item.title}</h3>
                   {item.category && <p className={styles.itemDesc}>{item.category}</p>}

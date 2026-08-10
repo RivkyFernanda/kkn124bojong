@@ -67,6 +67,7 @@ function getEmptyForm(tab) {
 export default function AdminPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState("wisata");
   const [data, setData] = useState({ wisata: [], umkm: [], gallery: [], news: [], anggota: [], programs: [], config: [], pesan: [] });
   const [loading, setLoading] = useState(false);
@@ -74,8 +75,52 @@ export default function AdminPage() {
   const [formData, setFormData] = useState({});
   const [formError, setFormError] = useState("");
   const [savingForm, setSavingForm] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState({ loading: false, message: "" });
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [toast, setToast] = useState(null);
+
+  const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  const CLOUDINARY_FOLDER = process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER || "kkn124bojong";
+  const CLOUDINARY_IMAGE_FIELDS = ["imageUrl", "thumbnailUrl", "bodyImageUrl"];
+
+  const uploadToCloudinary = async (file) => {
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      throw new Error("Konfigurasi Cloudinary belum lengkap. Isi NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME dan NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.");
+    }
+
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+    const payload = new FormData();
+    payload.append("file", file);
+    payload.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    if (CLOUDINARY_FOLDER) payload.append("folder", CLOUDINARY_FOLDER);
+
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: payload,
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error?.message || "Gagal mengunggah gambar ke Cloudinary.");
+    }
+
+    return result.secure_url;
+  };
+
+  const handleImageFileChange = async (event, fieldKey) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadStatus({ loading: true, message: "Mengunggah gambar ke Cloudinary..." });
+    try {
+      const url = await uploadToCloudinary(file);
+      setFormData((prev) => ({ ...prev, [fieldKey]: url }));
+      setUploadStatus({ loading: false, message: "✅ Gambar berhasil diunggah. URL otomatis ditambahkan." });
+    } catch (err) {
+      setUploadStatus({ loading: false, message: `❌ ${err.message}` });
+    }
+  };
 
   // State khusus kontak KKN
   const [kontakData, setKontakData] = useState({
@@ -104,9 +149,18 @@ export default function AdminPage() {
 
   // Auth state
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setAuthLoaded(true);
+    });
     return () => unsub();
   }, []);
+
+  useEffect(() => {
+    if (authLoaded && !user) {
+      router.push("/login");
+    }
+  }, [authLoaded, user, router]);
 
   // Fetch data for active tab
   const fetchData = useCallback(async (tab) => {
@@ -135,7 +189,7 @@ export default function AdminPage() {
       } else {
         const sortField =
           tab === "anggota" || tab === "programs" ? "urutan" :
-          tab === "gallery" ? "title" :
+          tab === "gallery" || tab === "news" ? "title" :
           "name";
         q = query(collection(db, colName), orderBy(sortField, "asc"));
       }
@@ -188,6 +242,12 @@ export default function AdminPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
+
+    if (!user) {
+      setFormError("Anda belum login. Silakan masuk kembali sebelum menyimpan data.");
+      return;
+    }
+
     const fields = FIELD_CONFIGS[activeTab];
     for (const f of fields) {
       if (f.required && !String(formData[f.key] ?? "").trim()) {
@@ -512,6 +572,22 @@ export default function AdminPage() {
                     {field.label}
                     {field.required && <span className={styles.required}>*</span>}
                   </label>
+
+                  {CLOUDINARY_IMAGE_FIELDS.includes(field.key) && activeTab !== "anggota" && (
+                    <div className={styles.uploadGroup}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className={styles.formInput}
+                        onChange={(e) => handleImageFileChange(e, field.key)}
+                        id={`form-upload-${field.key}`}
+                      />
+                      <small className={styles.uploadHint}>
+                        Unggah gambar langsung ke Cloudinary akun <strong>{CLOUDINARY_CLOUD_NAME || "(belum dikonfigurasi)"}</strong>.
+                      </small>
+                    </div>
+                  )}
+
                   {field.type === "textarea" ? (
                     <textarea
                       className={styles.formInput}
@@ -544,8 +620,20 @@ export default function AdminPage() {
                       id={`form-${field.key}`}
                     />
                   )}
+
+                  {CLOUDINARY_IMAGE_FIELDS.includes(field.key) && formData[field.key] && (
+                    <div className={styles.imagePreview}>
+                      <img src={formData[field.key]} alt="Preview Gambar" />
+                    </div>
+                  )}
                 </div>
               ))}
+
+              {uploadStatus.message && (
+                <div className={`${styles.formInfo} ${uploadStatus.loading ? styles.formInfoLoading : ""}`}>
+                  {uploadStatus.message}
+                </div>
+              )}
 
               {/* Foto preview live — only for Anggota tab */}
               {activeTab === "anggota" && formData.foto && (
